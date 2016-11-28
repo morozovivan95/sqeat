@@ -70,33 +70,49 @@ public class AccountTest {
     }
 
     @Test
-    public void getBalance() throws Exception {
-
+    public void shouldNotBeAbleToWithdrawMoreThanBalancePlusMaxCredit() {
+        final int initialBalance = account.getBalance();
+        assertFalse(account.withdraw(initialBalance + account.maxCredit + 1));
+        assertEquals(initialBalance, account.getBalance());
     }
 
     @Test
-    public void getMaxCredit() throws Exception {
-
+    public void shouldBeAbleToGetBalance() throws Exception {
+        account.deposit(1000);
+        assertEquals(1000, account.getBalance());
     }
 
     @Test
-    public void isBlocked() throws Exception {
-
+    public void shouldBeAbleToBlock() throws Exception {
+        account.block();
+        assertTrue(account.isBlocked());
     }
 
     @Test
-    public void block() throws Exception {
-
+    public void shouldBeAbleToUnblock() throws Exception {
+        account.block();
+        assertTrue(account.unblock());
+        assertFalse(account.isBlocked());
     }
 
     @Test
-    public void unblock() throws Exception {
-
+    public void shouldNotBeAbleToUnblockIfMaxCreditIsExceeded() throws Exception {
+        account.balance = -5000;
+        account.block();
+        assertFalse(account.unblock());
     }
 
     @Test
-    public void setMaxCredit() throws Exception {
-
+    public void shouldBeAbleToSetMaxCredit() throws Exception {
+        account.setMaxCredit(5000);
+        assertEquals(account.getMaxCredit(), 5000);
     }
 
+    @Test
+    public void shouldNotBeAbleToSetMaxCredit() throws Exception {
+        final int initialMaxCredit = account.getMaxCredit();
+        assertFalse(account.setMaxCredit(account.bound + 1));
+        assertFalse(account.setMaxCredit(-account.bound - 1));
+        assertEquals(initialMaxCredit, account.getMaxCredit());
+    }
 }

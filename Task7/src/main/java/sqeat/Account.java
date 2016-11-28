@@ -4,7 +4,7 @@ public class Account {
     boolean blocked = false;
     int bound = 1000000;
     int balance = 0;
-    int maxCredit = -1000;
+    int maxCredit = 1000;
 
     public boolean deposit(int sum) {
         if (blocked)
@@ -20,9 +20,9 @@ public class Account {
     public boolean withdraw(int sum) {
         if (blocked)
             return false;
-        else if (sum < 0 || sum > bound)
+        else if (sum < 0 || sum > bound + maxCredit)
             return false;
-        else if (balance <= maxCredit + sum)
+        else if (balance + maxCredit < sum)
             return false;
         else {
             balance -= sum;
@@ -35,7 +35,7 @@ public class Account {
     }
 
     public int getMaxCredit() {
-        return -maxCredit;
+        return maxCredit;
     }
 
     public boolean isBlocked() {
@@ -47,7 +47,7 @@ public class Account {
     }
 
     public boolean unblock() {
-        if (balance < maxCredit)
+        if (balance <= -maxCredit)
             return false;
         else
             blocked = false;
@@ -59,7 +59,7 @@ public class Account {
         if (mc < -bound || mc > bound)
             return false;
         else
-            maxCredit = -mc;
+            maxCredit = mc;
 
         return true;
     }
